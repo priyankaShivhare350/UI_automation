@@ -1,13 +1,12 @@
 import time
-
 from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from conftest import driver
 from pages.base_page import BasePage
 
 class CartPage(BasePage):
-    # Locators
     VIEW_CART_LINK = (By.CSS_SELECTOR, 'a.wpmenucart-contents')
     CART_ITEM_NAMES = (By.CSS_SELECTOR, 'td.product-name')
     REMOVE_BUTTONS = (By.CSS_SELECTOR, 'a.remove')
@@ -16,6 +15,7 @@ class CartPage(BasePage):
     SUBTOTAL = (By.CSS_SELECTOR, 'tr.cart-subtotal td span.woocommerce-Price-amount')
     TAX = (By.CSS_SELECTOR, 'tr.tax-rate td span.woocommerce-Price-amount')
     TOTAL = (By.CSS_SELECTOR, 'tr.order-total td span.woocommerce-Price-amount')
+    CART_QUANTITY_ICON = (By.CSS_SELECTOR, "span.cartcontents")
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -69,3 +69,27 @@ class CartPage(BasePage):
             'tax': tax,
             'total': total
         }
+
+    def get_quantity_for_product(self, product_name):
+        xpath = f"//td[@class='product-name']/a[text()='{product_name}']/../../td[@class='product-quantity']//input"
+        quantity_input = self.driver.find_element(By.XPATH, xpath)
+        return int(quantity_input.get_attribute("value"))
+
+    def get_cart_quantity(self):
+        return int(self.get_text(self.CART_QUANTITY_ICON).split(" ")[0])
+
+    def get_price_by_product_name(self, product_name):
+        xpath = f"//td[@class='product-name']/a[text()='{product_name}']/../../td[@class='product-price']/span"
+        element = self.driver.find_element(By.XPATH, xpath)
+        return float(element.text.replace("₹", "").replace(",", "").strip())
+
+    def wait_for_product_to_appear_in_cart_icon(self):
+        WebDriverWait(self.driver, 10).until(
+            lambda d: int(d.find_element(*self.CART_QUANTITY_ICON).text.split()[0]) > 0
+        )
+
+    def wait_for_item_removal(self, product_name, timeout=10):
+        xpath = f"//td[@class='product-name']/a[text()='{product_name}']"
+        WebDriverWait(self.driver, timeout).until(
+            EC.invisibility_of_element_located((By.XPATH, xpath))
+        )
