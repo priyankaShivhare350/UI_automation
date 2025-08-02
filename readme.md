@@ -3,7 +3,37 @@
 This project is a UI Automation Testing Framework built using **Python**, **Pytest**, and **Selenium WebDriver**. It supports multi-browser execution and generates beautiful HTML reports.
 
 ---
+##  Test Cases Automated
 
+Below is the summary of all the test cases covered in the framework, categorized by module:
+
+###  Login Module
+- **Verify successful login with valid credentials**
+- **Verify error message for invalid credentials**
+- **Verify login fails with blank email and password fields**
+
+###  Register Module
+- **Verify successful user registration with valid details**
+- **Verify registration fails when required fields are blank**
+- **Verify error messages for invalid inputs (e.g., weak password, invalid email)**
+
+###  Cart Module
+- **Verify product is added to cart successfully**
+- **Verify product is removed from cart**
+- **Verify cart reflects correct product details and quantity**
+- **Verify cart total updates correctly when quantity is changed**
+
+###  Billing Address Module
+- **Add new billing address from profile page**
+- **Edit existing billing address and verify updated details**
+- **Verify mandatory field validations during billing address submission**
+
+###  Shipping Address Module
+- **Add new shipping address from profile page**
+- **Edit existing shipping address and verify updated details**
+- **Verify shipping address form shows correct state and country values**
+
+---
 ## Getting Started
 
 ### 1. Install Requirements
