@@ -5,7 +5,7 @@ from utils import config
 
 @pytest.mark.cart
 class TestCartPage:
-     def test_add_single_product_to_cart(driver):
+     def test_add_single_product_to_cart(self,driver):
         cart_page = CartPage(driver)
         product_name = "Selenium Ruby"
         cart_page.add_product_to_cart_by_name(product_name)
@@ -13,7 +13,7 @@ class TestCartPage:
         cart_items = cart_page.get_cart_items()
         assert product_name in cart_items, f"{product_name} not found in cart."
     
-     def test_add_multiple_products_to_cart(driver):
+     def test_add_multiple_products_to_cart(self,driver):
         cart_page = CartPage(driver)
         products = ["Selenium Ruby", "Thinking in HTML"]
         for product in products:
@@ -25,7 +25,7 @@ class TestCartPage:
         for product in products:
             assert product in cart_items, f"{product} not found in cart"
     
-     def test_remove_one_of_multiple_products(driver):
+     def test_remove_one_of_multiple_products(self,driver):
         cart_page = CartPage(driver)
         cart_page.add_product_to_cart_by_name("Selenium Ruby")
         cart_page.wait_for_product_to_appear_in_cart_icon()
@@ -38,8 +38,7 @@ class TestCartPage:
         assert "Selenium Ruby" in items
         assert "Thinking in HTML" not in items
     
-     def test_remove_all_products(driver):
-        driver.get(config.BASE_URL)
+     def test_remove_all_products(self,driver):
         cart_page = CartPage(driver)
         cart_page.add_product_to_cart_by_name("Selenium Ruby")
         cart_page.wait_for_product_to_appear_in_cart_icon()
@@ -48,8 +47,7 @@ class TestCartPage:
         cart_page.open_cart()
         cart_page.remove_all_items()
         assert cart_page.is_cart_empty(), "Cart is not empty after removing all items"
-     def test_add_multiple_quantities_same_product(driver):
-        driver.get(config.BASE_URL)
+     def test_add_multiple_quantities_same_product(self,driver):
         cart_page = CartPage(driver)
         product = "Selenium Ruby"
         for _ in range(3):
@@ -61,14 +59,14 @@ class TestCartPage:
         quantity = cart_page.get_quantity_for_product(product)
         assert quantity == 3, f"Expected quantity 3 but got {quantity} for {product}"
     
-     def test_cart_icon_updated_quantity(driver):
+     def test_cart_icon_updated_quantity(self,driver):
         cart_page = CartPage(driver)
         cart_page.add_product_to_cart_by_name("Selenium Ruby")
         cart_page.wait_for_product_to_appear_in_cart_icon()
         quantity_icon = cart_page.get_cart_quantity()
         assert quantity_icon > 0, "Cart icon did not update with quantity"
     
-     def test_price_calculation_per_quantity(driver):
+     def test_price_calculation_per_quantity(self,driver):
         cart_page = CartPage(driver)
         product = "Selenium Ruby"
     
@@ -99,7 +97,7 @@ class TestCartPage:
         assert quantity == 3, f"Expected quantity 3, got {quantity}"
         assert subtotal == expected_subtotal, f"Expected subtotal {expected_subtotal}, got {subtotal}"
     
-     def test_delete_product_from_cart_then_go_back(driver):
+     def test_delete_product_from_cart_then_go_back(self,driver):
         cart_page = CartPage(driver)
         cart_page.add_product_to_cart_by_name("Selenium Ruby")
         cart_page.wait_for_product_to_appear_in_cart_icon()
@@ -109,7 +107,7 @@ class TestCartPage:
         cart_items = cart_page.get_cart_items()
         assert "Selenium Ruby" not in cart_items
     
-     def test_remove_from_already_empty_cart(driver):
+     def test_remove_from_already_empty_cart(self,driver):
         cart_page = CartPage(driver)
         cart_page.open_cart()
         cart_page.remove_all_items()
@@ -119,8 +117,7 @@ class TestCartPage:
         except:
             pytest.fail("Removing from an already empty cart caused an error")
     
-     def test_browser_back_after_removal(driver):
-        driver.get(config.BASE_URL)
+     def test_browser_back_after_removal(self,driver):
         cart_page = CartPage(driver)
         cart_page.add_product_to_cart_by_name("Selenium Ruby")
         cart_page.wait_for_product_to_appear_in_cart_icon()

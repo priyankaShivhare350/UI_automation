@@ -25,13 +25,13 @@ class CartPage(BasePage):
         self.click(self.VIEW_CART_LINK)
 
     def get_cart_items(self):
-        elements = self.get_elements(*self.CART_ITEM_NAMES)
+        elements = self.get_elements(self.CART_ITEM_NAMES)
         return [element.text for element in elements]
 
 
     def remove_all_items(self):
         while True:
-            remove_buttons = self.get_elements(*self.REMOVE_BUTTONS)
+            remove_buttons = self.get_elements(self.REMOVE_BUTTONS)
             if not remove_buttons:
                 break
             try:
@@ -47,7 +47,6 @@ class CartPage(BasePage):
     def add_product_to_cart_by_name(self, product_name):
         product_xpath = f"//h3[text()='{product_name}']/../..//a[text()='Add to basket']"
         product_locator = (By.XPATH, product_xpath)
-        self.scroll_into_view(product_locator)
         self.click(product_locator)
 
     def remove_item_by_name(self, product_name):
@@ -57,7 +56,7 @@ class CartPage(BasePage):
         # self.wait_for_element_invisible((By.CSS_SELECTOR, 'div.woocommerce-message'))
 
     def get_product_prices(self):
-        prices = self.get_elements(*self.PRODUCT_PRICES)
+        prices = self.get_elements(self.PRODUCT_PRICES)
         return [price.text for price in prices]
 
     def get_cart_totals(self):
