@@ -13,7 +13,6 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 
-# Add browser choice
 def pytest_addoption(parser):
     parser.addoption(
         "--browser_name", action="store", default="chrome", help="browser selection"
@@ -56,7 +55,6 @@ def driver(request):
     yield driver
     driver.quit()
 
-# Hook to add screenshot on failure
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item):
     outcome = yield
