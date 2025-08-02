@@ -25,13 +25,13 @@ class CartPage(BasePage):
         self.click(self.VIEW_CART_LINK)
 
     def get_cart_items(self):
-        elements = self.driver.find_elements(*self.CART_ITEM_NAMES)
+        elements = self.get_elements(*self.CART_ITEM_NAMES)
         return [element.text for element in elements]
 
 
     def remove_all_items(self):
         while True:
-            remove_buttons = self.driver.find_elements(*self.REMOVE_BUTTONS)
+            remove_buttons = self.get_elements(*self.REMOVE_BUTTONS)
             if not remove_buttons:
                 break
             try:
@@ -57,7 +57,7 @@ class CartPage(BasePage):
         # self.wait_for_element_invisible((By.CSS_SELECTOR, 'div.woocommerce-message'))
 
     def get_product_prices(self):
-        prices = self.driver.find_elements(*self.PRODUCT_PRICES)
+        prices = self.get_elements(*self.PRODUCT_PRICES)
         return [price.text for price in prices]
 
     def get_cart_totals(self):
@@ -72,7 +72,7 @@ class CartPage(BasePage):
 
     def get_quantity_for_product(self, product_name):
         xpath = f"//td[@class='product-name']/a[text()='{product_name}']/../../td[@class='product-quantity']//input"
-        quantity_input = self.driver.find_element(By.XPATH, xpath)
+        quantity_input = self.get_element((By.XPATH, xpath))
         return int(quantity_input.get_attribute("value"))
 
     def get_cart_quantity(self):
@@ -80,16 +80,16 @@ class CartPage(BasePage):
 
     def get_price_by_product_name(self, product_name):
         xpath = f"//td[@class='product-name']/a[text()='{product_name}']/../../td[@class='product-price']/span"
-        element = self.driver.find_element(By.XPATH, xpath)
+        element = self.get_element((By.XPATH, xpath))
         return float(element.text.replace("₹", "").replace(",", "").strip())
 
     def wait_for_product_to_appear_in_cart_icon(self):
-        WebDriverWait(self.driver, 10).until(
+        self.wait.until(
             lambda d: int(d.find_element(*self.CART_QUANTITY_ICON).text.split()[0]) > 0
         )
 
     def wait_for_item_removal(self, product_name, timeout=10):
         xpath = f"//td[@class='product-name']/a[text()='{product_name}']"
-        WebDriverWait(self.driver, timeout).until(
+        self.wait.until(
             EC.invisibility_of_element_located((By.XPATH, xpath))
         )
